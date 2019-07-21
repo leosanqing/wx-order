@@ -1,0 +1,8 @@
+2019-07-21 08:17:28.769  INFO 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : Starting WxOrderApplicationTests on bierezhongdeMBP with PID 21776 (started by zhuerchong in /Users/zhuerchong/Desktop/code/wx-order)
+2019-07-21 08:17:28.770  INFO 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : No active profile set, falling back to default profiles: default
+2019-07-21 08:17:30.022  INFO 21776 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-07-21 08:17:30.296  INFO 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : Started WxOrderApplicationTests in 1.98 seconds (JVM running for 2.936)
+2019-07-21 08:17:30.520 ERROR 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : error
+2019-07-21 08:17:30.520  WARN 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : warn..
+2019-07-21 08:17:30.520  INFO 21776 --- [main] c.l.wxorder.WxOrderApplicationTests      : name:root ,password:root
+2019-07-21 08:17:30.527  INFO 21776 --- [Thread-2] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
