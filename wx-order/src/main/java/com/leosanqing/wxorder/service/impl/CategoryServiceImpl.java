@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -15,8 +14,8 @@ public class CategoryServiceImpl implements CategoryService {
     private ProductCategoryDao product;
     @Override
     public ProductCategory findOne(Integer categoryId) {
-        Optional<ProductCategory> byId = product.findById(categoryId);
-        return byId.get();
+
+        return product.findOne(categoryId);
     }
 
     @Override

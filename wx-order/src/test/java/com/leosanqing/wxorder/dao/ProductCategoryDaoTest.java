@@ -18,7 +18,7 @@ public class ProductCategoryDaoTest {
 
     @Test
     public void findOne(){
-        Optional<ProductCategory> byId = repository.findById(1);
-        System.out.println(byId.toString());
+
+        System.out.println(repository.findOne(1));
     }
 }

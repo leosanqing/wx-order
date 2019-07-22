@@ -18,7 +18,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductInfoDao productInfoDao;
     @Override
     public ProductInfo findOne(String productId) {
-        return productInfoDao.findById(productId).get();
+        return productInfoDao.findOne(productId);
     }
 
     @Override
