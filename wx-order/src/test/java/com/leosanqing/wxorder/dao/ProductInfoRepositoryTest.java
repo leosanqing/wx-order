@@ -8,16 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProductInfoDaoTest {
+public class ProductInfoRepositoryTest {
     @Autowired
-    private ProductInfoDao productInfo;
+    private ProductInfoRepository productInfo;
 
     @Test
     public void save(){

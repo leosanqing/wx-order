@@ -1,7 +1,7 @@
 package com.leosanqing.wxorder.service.impl;
 
 import com.leosanqing.wxorder.bean.ProductInfo;
-import com.leosanqing.wxorder.dao.ProductInfoDao;
+import com.leosanqing.wxorder.dao.ProductInfoRepository;
 import com.leosanqing.wxorder.enums.ProductStatusEnum;
 import com.leosanqing.wxorder.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,25 +15,25 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private ProductInfoDao productInfoDao;
+    private ProductInfoRepository productInfoRepository;
     @Override
     public ProductInfo findOne(String productId) {
-        return productInfoDao.findOne(productId);
+        return productInfoRepository.findOne(productId);
     }
 
     @Override
     public Page<ProductInfo> findAll(Pageable pageable) {
-        return productInfoDao.findAll(pageable);
+        return productInfoRepository.findAll(pageable);
     }
 
 
     @Override
     public List<ProductInfo> findUpAll() {
-        return productInfoDao.findByProductStatus(ProductStatusEnum.UP.getCode());
+        return productInfoRepository.findByProductStatus(ProductStatusEnum.UP.getCode());
     }
 
     @Override
     public ProductInfo save(ProductInfo productInfo) {
-        return productInfoDao.save(productInfo);
+        return productInfoRepository.save(productInfo);
     }
 }

@@ -1,7 +1,7 @@
 package com.leosanqing.wxorder.service.impl;
 
 import com.leosanqing.wxorder.bean.ProductCategory;
-import com.leosanqing.wxorder.dao.ProductCategoryDao;
+import com.leosanqing.wxorder.dao.ProductCategoryRepository;
 import com.leosanqing.wxorder.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
-    private ProductCategoryDao product;
+    private ProductCategoryRepository product;
     @Override
     public ProductCategory findOne(Integer categoryId) {
 
