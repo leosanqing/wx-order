@@ -1,6 +1,7 @@
 package com.leosanqing.wxorder.service;
 
 import com.leosanqing.wxorder.bean.ProductInfo;
+import com.leosanqing.wxorder.dto.CartDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,4 +15,6 @@ public interface ProductService {
     Page<ProductInfo> findAll(Pageable pageable);
     List<ProductInfo> findUpAll();
     ProductInfo save(ProductInfo productInfo);
+
+    void decrease(List<CartDTO> cartDTOList);
 }

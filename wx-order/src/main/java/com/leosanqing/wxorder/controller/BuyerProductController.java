@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +40,8 @@ public class BuyerProductController {
                 map(ProductInfo::getCategoryType).
                 collect(Collectors.toList());
         List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(categoryList);
-        // 数据拼装
 
+        // 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();
         for (ProductCategory productCategory : productCategoryList) {
             ProductVO productVO = new ProductVO();
