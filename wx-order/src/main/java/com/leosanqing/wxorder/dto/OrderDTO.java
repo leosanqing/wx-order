@@ -6,13 +6,12 @@ import com.leosanqing.wxorder.enums.PayStatusEnum;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 @Data
-@Entity
+
 public class OrderDTO {
     private String orderId;
     private String buyerName;
