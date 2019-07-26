@@ -3,6 +3,7 @@ package com.leosanqing.wxorder.service.impl;
 import com.leosanqing.wxorder.bean.OrderDetail;
 import com.leosanqing.wxorder.bean.OrderMaster;
 import com.leosanqing.wxorder.bean.ProductInfo;
+import com.leosanqing.wxorder.converter.OrderMaster2OrderDTO;
 import com.leosanqing.wxorder.dao.OrderDetailRepository;
 import com.leosanqing.wxorder.dao.OrderMasterRepository;
 import com.leosanqing.wxorder.dto.CartDTO;
@@ -15,8 +16,10 @@ import com.leosanqing.wxorder.utils.KeyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -83,12 +86,29 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO findOne(String orderId) {
-        return null;
+        OrderMaster orderMaster = orderMasterRepository.findOne(orderId);
+        if(null == orderMaster)
+            throw new SellException(ResultExceptionEnum.ORDER_NOT_EXIT);
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(orderMaster,orderDTO);
+
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
+        if(CollectionUtils.isEmpty(orderDetailList))
+            throw new SellException(ResultExceptionEnum.ORDER_DETAIL_NOT_EXIT);
+        orderDTO.setOrderDetailList(orderDetailList);
+
+        return orderDTO;
     }
 
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
-        return null;
+        Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
+        List<OrderMaster> masterList = orderMasterPage.getContent();
+        List<OrderDTO> orderDTOList = OrderMaster2OrderDTO.convert(masterList);
+
+        return new PageImpl<OrderDTO>(orderDTOList,pageable,orderMasterPage.getTotalElements());
+
+
     }
 
     @Override
