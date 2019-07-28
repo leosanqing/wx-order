@@ -8,11 +8,13 @@ import com.leosanqing.wxorder.dao.OrderDetailRepository;
 import com.leosanqing.wxorder.dao.OrderMasterRepository;
 import com.leosanqing.wxorder.dto.CartDTO;
 import com.leosanqing.wxorder.dto.OrderDTO;
+import com.leosanqing.wxorder.enums.OrderStatusEnum;
 import com.leosanqing.wxorder.enums.ResultExceptionEnum;
 import com.leosanqing.wxorder.exception.SellException;
 import com.leosanqing.wxorder.service.OrderService;
 import com.leosanqing.wxorder.service.ProductService;
 import com.leosanqing.wxorder.utils.KeyUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductService productService;
@@ -106,13 +109,33 @@ public class OrderServiceImpl implements OrderService {
         List<OrderMaster> masterList = orderMasterPage.getContent();
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTO.convert(masterList);
 
-        return new PageImpl<OrderDTO>(orderDTOList,pageable,orderMasterPage.getTotalElements());
+        return new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
 
 
     }
 
     @Override
     public OrderDTO cancel(OrderDTO orderDTO) {
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO,orderMaster);
+        // 判断订单的状态
+        if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.error("[取消订单]，订单状态不正确，orderId={},orderStatus={}",orderDTO.getOrderId(),orderDTO.getOrderStatus());
+            throw new SellException(ResultExceptionEnum.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        OrderMaster updateResult = orderMasterRepository.save(orderMaster);
+        if (null ==updateResult) {
+            log.error("[取消订单]更新订单失败，orderMaster={}", orderMaster);
+            throw new SellException(ResultExceptionEnum.ORDER_UPDATE_ERROR);
+        }
+
+        // 返回库存
+        if(CollectionUtils.isEmpty())
+
+        // 如果已支付，退款
         return null;
     }
 
