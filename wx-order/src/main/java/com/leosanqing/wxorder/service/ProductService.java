@@ -16,5 +16,6 @@ public interface ProductService {
     List<ProductInfo> findUpAll();
     ProductInfo save(ProductInfo productInfo);
 
-    void decrease(List<CartDTO> cartDTOList);
+    void decreaseStock(List<CartDTO> cartDTOList);
+    void increaseStock(List<CartDTO> cartDTOList);
 }
