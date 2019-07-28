@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -41,7 +42,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void decrease(List<CartDTO> cartDTOList) {
+    @Transactional
+    public void decreaseStock(List<CartDTO> cartDTOList) {
         for(CartDTO cartDTO : cartDTOList){
             ProductInfo productInfo = productInfoRepository.findOne(cartDTO.getProductId());
             if (null == productInfo){
@@ -51,6 +53,20 @@ public class ProductServiceImpl implements ProductService {
             if(result<0){
                 throw new SellException(ResultExceptionEnum.PRODUCT_STOCK_ERROR);
             }
+            productInfo.setProductStock(result);
+            productInfoRepository.save(productInfo);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void increaseStock(List<CartDTO> cartDTOList) {
+        for(CartDTO cartDTO :cartDTOList){
+            ProductInfo productInfo = productInfoRepository.findOne(cartDTO.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ResultExceptionEnum.PRODUCT_NOT_EXIT);
+            }
+            Integer result = productInfo.getProductStock() + cartDTO.getStock();
             productInfo.setProductStock(result);
             productInfoRepository.save(productInfo);
         }
