@@ -133,7 +133,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 返回库存
-        if(CollectionUtils.isEmpty())
+        if(CollectionUtils.isEmpty(orderDTO.getOrderDetailList())){
+            
+        }
 
         // 如果已支付，退款
         return null;
