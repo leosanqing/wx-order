@@ -9,6 +9,7 @@ import com.leosanqing.wxorder.dao.OrderMasterRepository;
 import com.leosanqing.wxorder.dto.CartDTO;
 import com.leosanqing.wxorder.dto.OrderDTO;
 import com.leosanqing.wxorder.enums.OrderStatusEnum;
+import com.leosanqing.wxorder.enums.PayStatusEnum;
 import com.leosanqing.wxorder.enums.ResultExceptionEnum;
 import com.leosanqing.wxorder.exception.SellException;
 import com.leosanqing.wxorder.service.OrderService;
@@ -21,11 +22,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
+    @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
 
         String orderId = KeyUtil.genUniqueKey();
@@ -82,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream()
                 .map(e -> new CartDTO(e.getProductId(), e.getProductQuantity()))
                 .collect(Collectors.toList());
-        productService.decrease(cartDTOList);
+        productService.decreaseStock(cartDTOList);
 
         return orderDTO;
     }
@@ -115,9 +117,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
         OrderMaster orderMaster = new OrderMaster();
-        BeanUtils.copyProperties(orderDTO,orderMaster);
+
         // 判断订单的状态
         if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
             log.error("[取消订单]，订单状态不正确，orderId={},orderStatus={}",orderDTO.getOrderId(),orderDTO.getOrderStatus());
@@ -125,7 +128,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 修改订单状态
-        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        BeanUtils.copyProperties(orderDTO,orderMaster);
         OrderMaster updateResult = orderMasterRepository.save(orderMaster);
         if (null ==updateResult) {
             log.error("[取消订单]更新订单失败，orderMaster={}", orderMaster);
@@ -134,11 +138,21 @@ public class OrderServiceImpl implements OrderService {
 
         // 返回库存
         if(CollectionUtils.isEmpty(orderDTO.getOrderDetailList())){
-            
+            log.error("[订单取消]无该订单详情，orderDTO={}",orderDTO);
+            throw new SellException(ResultExceptionEnum.ORDER_DETAIL_EMPTY);
         }
 
+        List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().
+                stream().map(e -> new CartDTO(e.getProductId(), e.getProductQuantity()))
+                .collect(Collectors.toList());
+        productService.increaseStock(cartDTOList);
+
         // 如果已支付，退款
-        return null;
+        if (orderDTO.getOrderStatus().equals(PayStatusEnum.SUCCESS.getCode())){
+            // TODO
+
+        }
+        return orderDTO;
     }
 
     @Override
