@@ -5,6 +5,7 @@ import com.leosanqing.wxorder.bean.OrderMaster;
 import com.leosanqing.wxorder.dao.OrderDetailRepository;
 import com.leosanqing.wxorder.dao.OrderMasterRepository;
 import com.leosanqing.wxorder.dto.OrderDTO;
+import com.leosanqing.wxorder.enums.OrderStatusEnum;
 import com.leosanqing.wxorder.enums.ResultExceptionEnum;
 import com.leosanqing.wxorder.exception.SellException;
 import com.leosanqing.wxorder.service.OrderService;
@@ -83,6 +84,9 @@ public class OrderServiceImplTest {
 
     @Test
     public void cancel() {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.cancel(orderDTO);
+        Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(),result.getOrderStatus());
     }
 
     @Test
