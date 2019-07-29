@@ -156,12 +156,41 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
-        return null;
+        if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.error("【订单完结】订单完结异常,orderDTO={}",orderDTO);
+            throw new SellException(ResultExceptionEnum.ORDER_FINISH_ERROR);
+        }
+
+        orderDTO.setOrderStatus(OrderStatusEnum.FINISH.getCode());
+
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO,orderMaster);
+        orderMasterRepository.save(orderMaster);
+
+        return orderDTO;
     }
 
     @Override
+    @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
-        return null;
+        // 判断订单状态
+        if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.error("[订单状态不正确]订单状态不正确 ，orderDTO={}",orderDTO);
+            throw new SellException(ResultExceptionEnum.ORDER_STATUS_ERROR);
+        }
+        // 判断支付状态
+        if(!orderDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())){
+            log.error("【支付失败】支付状态不正确 ,orderDTO={}",orderDTO);
+            throw new SellException(ResultExceptionEnum.PAY_STATUS_ERROR);
+        }
+        // 更新订单
+        orderDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO,orderMaster);
+        orderMasterRepository.save(orderMaster);
+        return orderDTO;
     }
 }
