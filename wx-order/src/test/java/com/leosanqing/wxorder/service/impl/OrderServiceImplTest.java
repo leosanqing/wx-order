@@ -6,6 +6,7 @@ import com.leosanqing.wxorder.dao.OrderDetailRepository;
 import com.leosanqing.wxorder.dao.OrderMasterRepository;
 import com.leosanqing.wxorder.dto.OrderDTO;
 import com.leosanqing.wxorder.enums.OrderStatusEnum;
+import com.leosanqing.wxorder.enums.PayStatusEnum;
 import com.leosanqing.wxorder.enums.ResultExceptionEnum;
 import com.leosanqing.wxorder.exception.SellException;
 import com.leosanqing.wxorder.service.OrderService;
@@ -91,9 +92,19 @@ public class OrderServiceImplTest {
 
     @Test
     public void finish() {
+
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.finish(orderDTO);
+        Assert.assertEquals(OrderStatusEnum.FINISH.getCode(),result.getOrderStatus());
     }
 
     @Test
     public void paid() {
+
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.paid(orderDTO);
+        Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(),result.getPayStatus());
+
+
     }
 }
