@@ -12,6 +12,8 @@ public enum ResultExceptionEnum {
     ORDER_STATUS_ERROR(14,"订单状态不正确"),
     ORDER_UPDATE_ERROR(15,"订单更新失败"),
     ORDER_DETAIL_EMPTY(16,"订单详情为空"),
+    ORDER_FINISH_ERROR(17,"订单完结异常"),
+    PAY_STATUS_ERROR(18,"支付状态异常"),
     ;
 
     ResultExceptionEnum(Integer code, String mag) {
