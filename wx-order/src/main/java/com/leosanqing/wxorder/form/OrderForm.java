@@ -26,6 +26,6 @@ public class OrderForm {
 
     // 购物车
     @NotEmpty(message = "购物车不能为空")
-    private String item;
+    private String items;
 
 }
