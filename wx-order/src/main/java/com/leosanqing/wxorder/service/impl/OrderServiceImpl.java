@@ -72,9 +72,9 @@ public class OrderServiceImpl implements OrderService {
 
         // 写入订单数据库
         OrderMaster orderMaster = new OrderMaster();
+        orderDTO.setOrderId(orderId);
         BeanUtils.copyProperties(orderDTO,orderMaster);
         // 这个要写在BeanUtils后面，不然会被覆盖
-        orderMaster.setOrderId(orderId);
         orderMaster.setOrderAmount(orderAmount);
 
         orderMasterRepository.save(orderMaster);
