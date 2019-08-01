@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ProductService {
     ProductInfo findOne(String productId);
     Page<ProductInfo> findAll(Pageable pageable);

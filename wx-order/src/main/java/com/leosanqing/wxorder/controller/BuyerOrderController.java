@@ -10,15 +10,18 @@ import com.leosanqing.wxorder.service.OrderService;
 import com.leosanqing.wxorder.utils.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,9 +29,10 @@ import java.util.Map;
  * @Date: 2019-07-30 06:57
  */
 
-@RequestMapping("/buyer/order")
-@Controller
+@RequestMapping("/buyer/order/")
+@RestController
 @Slf4j
+@ControllerAdvice
 public class BuyerOrderController {
     @Autowired
     private OrderService orderService;
@@ -61,6 +65,21 @@ public class BuyerOrderController {
 
     //订单列表
 
+    @RequestMapping("/list")
+    public ResultVO<List<OrderDTO>> list(@RequestParam("openid") String openid,
+                                         @RequestParam(value = "page",defaultValue = "0") Integer page,
+                                         @RequestParam(value = "size",defaultValue = "10")Integer size){
+        if(StringUtils.isEmpty(openid)){
+            log.error("[订单查询] openid为空");
+            throw new SellException(ResultExceptionEnum.PARAM_ERROR);
+        }
+
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<OrderDTO> list = orderService.findList(openid, pageRequest);
+        return ResultVOUtil.success(list.getContent());
+
+
+    }
     // 订单详情
 
     // 取消订单
