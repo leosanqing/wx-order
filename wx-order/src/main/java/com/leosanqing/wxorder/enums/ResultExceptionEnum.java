@@ -17,6 +17,7 @@ public enum ResultExceptionEnum {
     ORDER_FINISH_ERROR(17,"订单完结异常"),
     PAY_STATUS_ERROR(18,"支付状态异常"),
     CART_EMPTY(19,"购物车为空"),
+    ORDER_OWNER_ERROR(20,"订单不属于该用户"),
     ;
 
     ResultExceptionEnum(Integer code, String mag) {
